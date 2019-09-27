@@ -1,6 +1,6 @@
 {
   "name": "tsooq-gen",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "homepage": "https://github.com/cornholio127/tsooq-gen",
   "description": "TypeScript Object Oriented Querying",
   "author": "Mathias Haessig",
