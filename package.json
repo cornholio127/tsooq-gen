@@ -1,0 +1,42 @@
+{
+  "name": "tsooq-gen",
+  "version": "0.1.0",
+  "homepage": "https://github.com/cornholio127/tsooq-gen",
+  "description": "TypeScript Object Oriented Querying",
+  "author": "Mathias Haessig",
+  "license": "Apache License Version 2.0",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cornholio127/tsooq-gen.git"
+  },
+  "scripts": {
+    "build": "npm run build-ts && npm run tslint",
+    "build-ts": "npx tsc",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "gen": "npx tsc -t es6 -m commonjs --outDir bin src/tsooq-gen.ts && node bin/tsooq-gen.js",
+    "test": "mocha --require ts-node/register test/*.ts"
+  },
+  "dependencies": {
+    "pg": "7.12.1",
+    "node-docker-api": "1.1.22"
+  },
+  "devDependencies": {
+    "@types/node": "12.7.5",
+    "@types/pg": "7.11.1",
+    "typescript": "3.6.3",
+    "tslint": "5.18.0",
+    "ts-node": "7.0.1",
+    "nodemon": "1.19.1",
+    "cross-env": "5.2.0",
+    "mocha": "6.2.0",
+    "chai": "4.2.0",
+    "sinon": "7.4.1",
+    "@types/mocha": "5.2.7",
+    "@types/chai": "4.2.2",
+    "@types/sinon": "4.3.1",
+    "jsonfile": "5.0.0",
+    "@types/jsonfile": "5.0.0"
+  },
+  "main": "bin/tsooq-gen.js"
+}
