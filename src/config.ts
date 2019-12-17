@@ -4,7 +4,9 @@ import * as fs from 'fs';
 const DEFAULT_CONFIG_FILE = './.tsooq.json';
 
 export interface Config {
-  ddlScript: string;
+  ddlScript?: string;
+  migrationCmd?: string;
+  migrationWorkingDir?: string;
   outputDir: string;
   schemaName: string;
 }

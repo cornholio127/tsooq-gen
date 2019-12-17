@@ -1,7 +1,8 @@
 import { Pool, PoolClient } from 'pg';
 import * as fs from 'fs';
+import { exec } from 'child_process';
 import { runDatabaseScript } from './setup';
-import { getConfig } from './config';
+import { getConfig, Config } from './config';
 
 interface FieldDefinition {
   ordinal: number;
@@ -40,9 +41,25 @@ const transaction: (pool: Pool, runnable: (client: PoolClient) => Promise<any>) 
   });
 });
 
-const initDatabase: (pool: Pool, sqlFile: string) => Promise<void> = async (pool, sqlFile) => {
-  const sql = fs.readFileSync(sqlFile).toString();
-  await transaction(pool, client => client.query(sql));
+const childProccessStdout = (s: string) => console.log(`\x1b[90m${s}\x1b[0m`);
+
+const cmd = (shellCommand: string, workingDirectory: string): Promise<void> => new Promise<void>((resolve, reject) => {
+  const cp = exec(shellCommand, { cwd: workingDirectory });
+  cp.stdout.on('data', childProccessStdout);
+  cp.stderr.on('data', console.error);
+  cp.on('exit', resolve);
+  cp.on('error', reject);
+});
+
+const initDatabase = async (pool: Pool, config: Config): Promise<void> => {
+  if (config.ddlScript) {
+    const sql = fs.readFileSync(config.ddlScript).toString();
+    await transaction(pool, client => client.query(sql));
+  } else if (config.migrationCmd) {
+    await cmd(config.migrationCmd, config.migrationWorkingDir || '.');
+  } else {
+    throw new Error('Either ddlScript or migrationCmd must be provided');
+  }
 };
 
 const loadSchema: (pool: Pool, schemaName: string) => Promise<string[]> = (pool, schemaName) => new Promise<string[]>((resolve, reject) => {
@@ -152,6 +169,6 @@ const generateModel: (pool: Pool, schemaName: string, outputDir: string) => Prom
 const config = getConfig();
 
 runDatabaseScript(async pool => {
-  await initDatabase(pool, config.ddlScript);
+  await initDatabase(pool, config);
   await generateModel(pool, config.schemaName, config.outputDir);
 }).catch(console.error);
