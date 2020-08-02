@@ -18,7 +18,7 @@
     "test": "mocha --require ts-node/register test/*.ts"
   },
   "dependencies": {
-    "pg": "7.12.1",
+    "pg": "8.3.0",
     "node-docker-api": "1.1.22"
   },
   "devDependencies": {
