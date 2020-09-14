@@ -16,7 +16,7 @@ const readConfig = (filename: string) => {
   return config;
 };
 
-export const getConfig = () => {
+export const getConfig = (): Config => {
   const configFile = process.env.CONFIG || DEFAULT_CONFIG_FILE;
   if (fs.existsSync(configFile)) {
     return readConfig(configFile);
